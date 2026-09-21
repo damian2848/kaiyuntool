@@ -5,7 +5,7 @@
 固定安装本次发布版本：
 
 ```bash
-git clone --branch v1.0.1 --depth 1 https://github.com/damian2848/kaiyuntool.git
+git clone --branch v1.0.2 --depth 1 https://ghfast.top/https://github.com/damian2848/kaiyuntool.git
 cd kaiyuntool
 node scripts/install.mjs --agent codex
 ```
@@ -22,6 +22,19 @@ node scripts/install.mjs --agent codex --skill kaiyuncode-configure-agents
 # 预览安装位置，不写入
 node scripts/install.mjs --agent codex --dry-run
 ```
+
+## 下载镜像与自定义来源
+
+README 的一键安装入口以及 `scripts/install.sh` 默认使用 `ghfast.top` 加速 GitHub 内容，适合无法稳定直连 GitHub 的网络；加速源失败时会自动回退官方 GitHub 仓库。GitHub 仓库仍是版本和源码的唯一上游。
+
+如果已经把仓库同步到自己的 Gitee、GitCode 或内网 Git 服务，可以显式指定来源；显式来源失败时安装器不会偷偷切换到其他仓库：
+
+```bash
+curl -fsSL https://ghfast.top/https://raw.githubusercontent.com/damian2848/kaiyuntool/v1.0.2/scripts/install.sh \
+  | KAIYUNTOOL_REPOSITORY_URL=https://gitee.com/your-name/kaiyuntool.git bash -s -- --agent codex
+```
+
+需要直接使用 GitHub 时，同样把 `KAIYUNTOOL_REPOSITORY_URL` 设为 `https://github.com/damian2848/kaiyuntool.git`。`KAIYUNTOOL_REF` 可选择标签、分支或提交；默认仍固定为当前发布标签。请只使用你信任且与上游同步的镜像。
 
 ## 默认目录和 profile
 

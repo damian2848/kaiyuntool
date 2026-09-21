@@ -145,3 +145,24 @@ test("CLI installation introduces only installed capabilities and does not confi
   const preview = await promisify(execFile)(process.execPath, [...args, "--dry-run"]);
   assert.doesNotMatch(preview.stdout, /安装完成/);
 });
+
+test("shell installers prefer the mainland-friendly mirror and allow an explicit repository", async () => {
+  const [installer, pluginInstaller, readme, installationDoc] = await Promise.all([
+    readFile(join(ROOT, "scripts/install.sh"), "utf8"),
+    readFile(join(ROOT, "scripts/install-codex-plugin.sh"), "utf8"),
+    readFile(join(ROOT, "README.md"), "utf8"),
+    readFile(join(ROOT, "docs/installation.md"), "utf8"),
+  ]);
+  const mirror = "https://ghfast.top/https://github.com/damian2848/kaiyuntool.git";
+  for (const source of [installer, pluginInstaller]) {
+    assert.match(source, new RegExp(mirror.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+    assert.match(source, /KAIYUNTOOL_REPOSITORY_URL/);
+  }
+  assert.match(installer, /镜像源暂时不可用，正在回退 GitHub/);
+  assert.match(readme, /ghfast\.top\/https:\/\/raw\.githubusercontent\.com/);
+  assert.match(installationDoc, /显式来源失败时安装器不会偷偷切换/);
+  await Promise.all([
+    promisify(execFile)("bash", ["-n", join(ROOT, "scripts/install.sh")]),
+    promisify(execFile)("bash", ["-n", join(ROOT, "scripts/install-codex-plugin.sh")]),
+  ]);
+});

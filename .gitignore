@@ -4,3 +4,9 @@ node_modules/
 .env
 .env.*
 !.env.example
+# Local credentials and generated installer state
+credentials.env
+kaiyun-video.env
+kaiyun-tools.env
+.kaiyuncode-install.json
+.kaiyuncode-install.lock

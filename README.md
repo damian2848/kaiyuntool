@@ -10,16 +10,16 @@ KaiyunTool（原 KaiyunCode Tools）是一套可独立安装的 Agent Skills。�
 
 ```bash
 # OpenClaw
-curl -fsSL https://raw.githubusercontent.com/damian2848/kaiyuntool/v1.0.1/scripts/install.sh | bash -s -- --agent openclaw
+curl -fsSL https://ghfast.top/https://raw.githubusercontent.com/damian2848/kaiyuntool/v1.0.2/scripts/install.sh | bash -s -- --agent openclaw
 
 # Codex
-curl -fsSL https://raw.githubusercontent.com/damian2848/kaiyuntool/v1.0.1/scripts/install.sh | bash -s -- --agent codex
+curl -fsSL https://ghfast.top/https://raw.githubusercontent.com/damian2848/kaiyuntool/v1.0.2/scripts/install.sh | bash -s -- --agent codex
 
 # Claude Code
-curl -fsSL https://raw.githubusercontent.com/damian2848/kaiyuntool/v1.0.1/scripts/install.sh | bash -s -- --agent claude
+curl -fsSL https://ghfast.top/https://raw.githubusercontent.com/damian2848/kaiyuntool/v1.0.2/scripts/install.sh | bash -s -- --agent claude
 ```
 
-其他宿主将 `--agent` 改为 `grok` 或 `hermes`。支持 macOS、Linux、Windows WSL，也可指定自定义技能目录。
+安装入口和后续仓库下载默认走国内网络可直连的 GitHub 加速镜像；镜像不可用时自动回退 GitHub。GitHub 仍是唯一上游源码仓库。其他宿主将 `--agent` 改为 `grok` 或 `hermes`。支持 macOS、Linux、Windows WSL，也可指定自定义技能目录。
 
 **安装完成会显示你能使用的功能和示例。新建一个助手会话，直接用中文说需求。** 安装本身不会切换当前模型，也不会发起付费生成。
 
@@ -61,14 +61,14 @@ OpenClaw 自身的 Ultra 多代理工作流与上游推理档位不同；原生�
 
 ## 更新与旧版迁移
 
-升级到 1.0.1，重跑上面的安装命令即可。获取后续最新版本时，把 URL 中的 `v1.0.1` 改成 `main`。
+升级到 1.0.2，重跑上面的安装命令即可。安装器默认固定安装 1.0.2；需要测试开发分支时，在命令中的 `bash` 前加 `KAIYUNTOOL_REF=main`。也可用 `KAIYUNTOOL_REPOSITORY_URL` 指定自己的 Gitee、GitCode 或其他同步仓库。
 
 原 `kaiyuncode-tools` 安装记录仍可识别。技能目录名称 `kaiyuncode-*`、`KAIYUN_API_KEY` 和凭据路径保留兼容；无本地修改的旧技能可直接升级。遇到本地改动，安装器会停止并提示，不覆盖你的修改。通过旧 Codex 插件安装的用户需禁用旧插件，避免技能重复。
 
 ## 开发
 
 ```bash
-git clone https://github.com/damian2848/kaiyuntool.git
+git clone https://ghfast.top/https://github.com/damian2848/kaiyuntool.git
 cd kaiyuntool
 npm run build:skills
 npm run validate

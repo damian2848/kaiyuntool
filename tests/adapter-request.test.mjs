@@ -159,12 +159,12 @@ test("multipart summaries and filenames do not expose local directories", () => 
     {
       field: "video",
       data: new Blob(["clip"]),
-      filename: "/Users/private/source.mp4",
+      filename: "/private/source.mp4",
     },
   ]);
 
   assert.equal(request.body.get("video").name, "source.mp4");
-  assert.ok(!JSON.stringify(request.summary).includes("/Users/private"));
+  assert.ok(!JSON.stringify(request.summary).includes("/private"));
 });
 
 test("dry-run summaries redact embedded sensitive values", () => {

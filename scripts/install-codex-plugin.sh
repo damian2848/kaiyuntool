@@ -2,7 +2,9 @@
 
 set -euo pipefail
 
-readonly REPOSITORY_URL="https://github.com/damian2848/kaiyuntool.git"
+readonly GITHUB_REPOSITORY_URL="https://github.com/damian2848/kaiyuntool.git"
+readonly DEFAULT_REPOSITORY_URL="https://ghfast.top/https://github.com/damian2848/kaiyuntool.git"
+readonly REPOSITORY_URL="${KAIYUNTOOL_REPOSITORY_URL:-${DEFAULT_REPOSITORY_URL}}"
 readonly PLUGIN_NAME="kaiyuntool"
 readonly INSTALL_DIR="${HOME}/plugins/${PLUGIN_NAME}"
 readonly MARKETPLACE_PATH="${HOME}/.agents/plugins/marketplace.json"
@@ -25,7 +27,7 @@ if [[ -e "${INSTALL_DIR}" ]]; then
 
   origin_url="$(git -C "${INSTALL_DIR}" remote get-url origin 2>/dev/null || true)"
   case "${origin_url}" in
-    "${REPOSITORY_URL}"|"https://github.com/damian2848/kaiyuntool"|"git@github.com:damian2848/kaiyuntool.git"|"ssh://git@github.com/damian2848/kaiyuntool.git") ;;
+    "${REPOSITORY_URL}"|"${DEFAULT_REPOSITORY_URL}"|"${GITHUB_REPOSITORY_URL}"|"https://github.com/damian2848/kaiyuntool"|"git@github.com:damian2848/kaiyuntool.git"|"ssh://git@github.com/damian2848/kaiyuntool.git") ;;
     *) fail "目标目录不是 KaiyunTool 仓库，未执行覆盖：${INSTALL_DIR}" ;;
   esac
 
@@ -34,11 +36,18 @@ if [[ -e "${INSTALL_DIR}" ]]; then
   [[ "${current_branch}" == "main" ]] || fail "仓库当前不在 main 分支，未自动切换。"
 
   printf '正在更新 %s...\n' "${INSTALL_DIR}"
-  git -C "${INSTALL_DIR}" pull --ff-only origin main
+  git -C "${INSTALL_DIR}" pull --ff-only "${REPOSITORY_URL}" main
 else
   mkdir -p "$(dirname "${INSTALL_DIR}")"
   printf '正在安装到 %s...\n' "${INSTALL_DIR}"
-  git clone --depth 1 --branch main "${REPOSITORY_URL}" "${INSTALL_DIR}"
+  if ! git clone --depth 1 --branch main "${REPOSITORY_URL}" "${INSTALL_DIR}"; then
+    if [[ -n "${KAIYUNTOOL_REPOSITORY_URL:-}" || "${REPOSITORY_URL}" == "${GITHUB_REPOSITORY_URL}" ]]; then
+      exit 1
+    fi
+    printf '镜像源暂时不可用，正在回退 GitHub...\n' >&2
+    rm -rf -- "${INSTALL_DIR}"
+    git clone --depth 1 --branch main "${GITHUB_REPOSITORY_URL}" "${INSTALL_DIR}"
+  fi
 fi
 
 [[ -f "${INSTALL_DIR}/.codex-plugin/plugin.json" ]] || fail "仓库缺少 .codex-plugin/plugin.json。"

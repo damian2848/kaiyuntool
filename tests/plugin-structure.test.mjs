@@ -84,9 +84,10 @@ test("package exposes the plugin maintenance commands", async () => {
   assert.deepEqual(packageJson.scripts, {
     test: "node --test tests/*.test.mjs",
     "sync:tutorial": "node scripts/sync-production-tutorial.mjs",
-    validate: "npm run check:skills && npm test",
+    validate: "npm run check:sensitive && npm run check:skills && npm test",
     "build:skills": "node scripts/build-skills.mjs",
     "check:skills": "node scripts/build-skills.mjs --check",
     "install:skills": "node scripts/install.mjs",
+    "check:sensitive": "node scripts/check-sensitive.mjs",
   });
 });
